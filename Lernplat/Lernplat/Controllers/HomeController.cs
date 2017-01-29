@@ -51,6 +51,11 @@ namespace Lernplat.Controllers
 
         private string FDir_AppData = "~/PDFs/";
 
+        /// <summary>
+        /// Opens a new Tab that consists of the requsted PDF document 
+        /// </summary>
+        /// <param name="FileName">PDF name</param>
+        /// <returns></returns>
         public ActionResult PDF(String FileName)
         {
             var slapath = Server.MapPath(FDir_AppData + FileName + ".pdf");
