@@ -1,0 +1,62 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+@model Lernplat.Models.GewichtungsModel
+
+<button data-toggle="collapse" data-target="#demo" class="btn" style="margin-bottom:10px">
+    Ausgaben Info
+</button>
+
+@using (Html.BeginForm())
+{
+    <div class="container">
+        <div class="collapse" id="demo">
+
+            <table id="myDataTable" class="table table-condensed table-striped">
+                @for (int i = 0; i < Lernplat.Controllers.HomeController.listenObj.grupiertFach.Count(); i++)
+                {
+                    <tr>
+                        <td>
+                           @Lernplat.Controllers.HomeController.listenObj.grupiertFach[i].Name
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(o => Model.Gewichtung[i],
+                              new { min = "1", max = Lernplat.Controllers.HomeController.listenObj.grupiertFach.Count(), step = "1", value = Lernplat.Controllers.HomeController.listenObj.grupiertFach[i].Gewichtung, onkeydown = "return false", type = "number" })
+                        </td>
+
+                    </tr>
+                }                
+                <tr>
+                    <td>
+
+                    </td>
+                    <td>
+                        <button class ="btn btn-sm btn-danger" type="submit"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+
+<div>
+    <table class="table table-hover table-striped table-condensed table-dynamic" style="margin-top: 20px">
+        <tr>
+            <td class="text-center"><b>Tag</b></td>
+            <td class="text-center"><b>Zeit in der Uni</b></td>
+            <td class="text-center"><b>Lerneinheiten Zuhause</b></td>
+            <td class="text-center"><b>Empfohlene Lernfächer</b></td>
+        </tr>
+        @for (int i = 1; i < Lernplat.Controllers.HomeController.listenObj.zeitverbracht.Count; i++)
+        {
+            <tr>
+                <td class="text-center"><b>@Lernplat.Controllers.HomeController.listenObj.zeitverbracht[i].Tag.ToString("dd.MM.yyyy")</b></td>
+                <td class="text-center"><b>@Lernplat.Controllers.HomeController.listenObj.zeitverbracht[i].Verbrauch.ToString("hh\\:mm")</b></td>
+                <td class="text-center"><b>@Lernplat.Controllers.HomeController.listenObj.zeitverbracht[i].Lerneinheiten</b></td>
+                <td class="text-center"><b>@Html.ActionLink("BWL", "PDF", "Home", new { FileName = "BWL" },  new { target = "_blank" }), @Html.ActionLink("E-Technik", "PDF", "Home", new { FileName = "E-Technik" }, new { target = "_blank" })</b></td>
+            </tr>
+        }
+    </table>
+
+</div>
+}
