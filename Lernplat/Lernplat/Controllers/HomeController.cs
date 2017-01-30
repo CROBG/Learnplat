@@ -14,7 +14,7 @@ namespace Lernplat.Controllers
         /// <summary>
         /// Contains a filepath to the csv file
         /// </summary>
-        public static string Pfad = @"C:\Users\RZE\Desktop\Stundenplan.csv";
+        public static string Pfad = "~/LernplanFiles/Stundenplan.csv";
 
         public static Listen listenObj = new Listen();
 
@@ -27,7 +27,7 @@ namespace Lernplat.Controllers
         /// <returns>Index.cshtml/returns>
         public ActionResult Index()
         {
-            listenObj.lernplan = HomeHeader.DataLoader(Pfad);
+            listenObj.lernplan = HomeHeader.DataLoader(Server.MapPath(Pfad));
 
             listenObj.zeitverbracht = HomeHeader.VebrauchsCalculations(listenObj.lernplan);
 
