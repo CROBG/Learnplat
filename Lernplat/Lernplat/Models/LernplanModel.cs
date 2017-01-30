@@ -14,5 +14,6 @@ namespace Lernplat.Models
         public DateTime Beginn { get; set; }
         public DateTime Ende { get; set; }
         public int Gewichtung { get; set; }
+        public int LerneinheitenZahl { get; set; }
     }
 }

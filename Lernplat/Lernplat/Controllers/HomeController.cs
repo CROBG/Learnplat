@@ -18,7 +18,11 @@ namespace Lernplat.Controllers
 
         public static Listen listenObj = new Listen();
 
-        public static String PathToPDF = "";
+        private static Listen originalFacher = new Listen();
+
+        public static int LehreinheitenCount = 0;
+
+        public static bool SafeToRefresh = false;
 
         /// <summary>
         /// Controller for the Index page
@@ -27,24 +31,47 @@ namespace Lernplat.Controllers
         /// <returns>Index.cshtml/returns>
         public ActionResult Index()
         {
-            listenObj.lernplan = HomeHeader.DataLoader(Server.MapPath(Pfad));
+            if (!SafeToRefresh)
+            {
+                listenObj.lernplan = HomeHeader.DataLoader(Server.MapPath(Pfad));
 
-            listenObj.zeitverbracht = HomeHeader.VebrauchsCalculations(listenObj.lernplan);
+                listenObj.zeitverbracht = HomeHeader.VebrauchsCalculations(listenObj.lernplan);
 
-            /*Groups the Name values from the LernplanModel list and creates a Subject list
-             */
-            listenObj.grupiertFach = listenObj.lernplan.Where(o => o.Name.Contains("T2"))
-                                                       .GroupBy(o => o.Name)
-                                                       .Select(grp => grp.FirstOrDefault())
-                                                       .ToList();
+
+                /*Groups the Name values from the LernplanModel list and creates a Subject list
+                 */
+                listenObj.grupiertFach = listenObj.lernplan.Where(o => o.Name.Contains("T2"))
+                                                           .GroupBy(o => o.Name)
+                                                           .Select(grp => grp.FirstOrDefault())
+                                                           .ToList();
+                originalFacher = listenObj;
+            }
+
             return View(new GewichtungsModel());
         }
 
         [HttpPost]
         public ActionResult Index(GewichtungsModel gew)
         {
-            for (int i = 0; i < listenObj.grupiertFach.Count; i++)
-                listenObj.grupiertFach[i].Gewichtung = gew.Gewichtung[i];
+            if (!SafeToRefresh)
+            {
+                listenObj = originalFacher;
+
+                int Gewichtungscounter = 0;
+
+                for (int i = 0; i < listenObj.grupiertFach.Count; i++)
+                {
+                    listenObj.grupiertFach[i].Gewichtung = gew.Gewichtung[i];
+                    Gewichtungscounter += gew.Gewichtung[i];
+                }
+
+                for (int i = 0; i < listenObj.grupiertFach.Count; i++)
+                    listenObj.grupiertFach[i].LerneinheitenZahl = LehreinheitenCount * gew.Gewichtung[i] / Gewichtungscounter;
+
+                listenObj = HomeHeader.LerneinheitenVerteiler(listenObj);
+            }
+
+            SafeToRefresh = true;
 
             return View(gew);
         }

@@ -81,8 +81,11 @@ namespace Lernplat.Controllers
                 {
                     Tag = dt,
                     Verbrauch = ts,
-                    Lerneinheiten = lerneinheit
+                    Lerneinheiten = lerneinheit,
+                    LernFacher = ""
                 });
+
+                HomeController.LehreinheitenCount += lerneinheit;
             }
 
             return zeitverbracht;
@@ -93,7 +96,7 @@ namespace Lernplat.Controllers
         /// </summary>
         /// <param name="Path">String containing the csv filepath</param>
         /// <returns></returns>
-        public static List<LernplanModel> DataLoader (string Path)
+        public static List<LernplanModel> DataLoader(string Path)
         {
             List<LernplanModel> lernplan = new List<LernplanModel>();
             //Makes a reference to the csv file
@@ -133,6 +136,22 @@ namespace Lernplat.Controllers
             reader.Dispose();
 
             return lernplan;
+        }
+
+        public static Listen LerneinheitenVerteiler(Listen listenObj)
+        {
+            listenObj.grupiertFach = listenObj.grupiertFach.OrderByDescending(o => o.LerneinheitenZahl).ToList();
+
+            for (int i = 0; i < listenObj.zeitverbracht.Count(); i++)
+            { 
+                listenObj.zeitverbracht[i].LernFacher += listenObj.grupiertFach[0].Name.Split('(').First();
+
+                listenObj.grupiertFach[0].LerneinheitenZahl -= listenObj.zeitverbracht[i].Lerneinheiten;
+
+                listenObj.grupiertFach = listenObj.grupiertFach.OrderByDescending(o => o.LerneinheitenZahl).ToList();
+            }
+
+            return listenObj;
         }
     }
 }
