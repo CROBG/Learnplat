@@ -143,10 +143,18 @@ namespace Lernplat.Controllers
             listenObj.grupiertFach = listenObj.grupiertFach.OrderByDescending(o => o.LerneinheitenZahl).ToList();
 
             for (int i = 0; i < listenObj.zeitverbracht.Count(); i++)
-            { 
-                listenObj.zeitverbracht[i].LernFacher += listenObj.grupiertFach[0].Name.Split('(').First();
-
-                listenObj.grupiertFach[0].LerneinheitenZahl -= listenObj.zeitverbracht[i].Lerneinheiten;
+            {
+                if (listenObj.zeitverbracht[i].Lerneinheiten == 6)
+                {
+                    listenObj.zeitverbracht[i].LernFacher += listenObj.grupiertFach[0].Name.Split('(').First() + listenObj.grupiertFach[1].Name.Split('(').First();
+                    listenObj.grupiertFach[0].LerneinheitenZahl -= 3;
+                    listenObj.grupiertFach[1].LerneinheitenZahl -= 3;
+                }
+                else
+                {
+                    listenObj.zeitverbracht[i].LernFacher += listenObj.grupiertFach[0].Name.Split('(').First();
+                    listenObj.grupiertFach[0].LerneinheitenZahl -= listenObj.zeitverbracht[i].Lerneinheiten;
+                }
 
                 listenObj.grupiertFach = listenObj.grupiertFach.OrderByDescending(o => o.LerneinheitenZahl).ToList();
             }
