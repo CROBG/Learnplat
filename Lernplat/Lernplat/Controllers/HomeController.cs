@@ -87,6 +87,7 @@ namespace Lernplat.Controllers
         {
             var slapath = Server.MapPath(FDir_AppData + FileName + ".pdf");
 
+            // Opening new tab with PDF
             Response.ClearContent();
             Response.ClearHeaders();
             Response.AddHeader("Content-Disposition", "inline;filename=" + slapath);
