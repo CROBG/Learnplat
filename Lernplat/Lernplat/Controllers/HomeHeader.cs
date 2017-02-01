@@ -138,24 +138,37 @@ namespace Lernplat.Controllers
             return lernplan;
         }
 
+        /// <summary>
+        /// Spreads the available Subjets on the Calender Dates dependent on the Gewichtugs factor on that Subjet
+        /// </summary>
+        /// <param name="listenObj">Object containing all Lists</param>
+        /// <returns></returns>
         public static Listen LerneinheitenVerteiler(Listen listenObj)
         {
+            /*Orders the list of Subjets depending on the Gewichtungs Factor
+             */
             listenObj.grupiertFach = listenObj.grupiertFach.OrderByDescending(o => o.LerneinheitenZahl).ToList();
 
+            /*Iterates through the list of Dates and adds the Subjects to the Date
+             */
             for (int i = 0; i < listenObj.zeitverbracht.Count(); i++)
             {
+                //If the day has 6 Lerneinheiten it adds two subjets with the highest Gewichtungs factor
                 if (listenObj.zeitverbracht[i].Lerneinheiten == 6)
                 {
                     listenObj.zeitverbracht[i].LernFacher += listenObj.grupiertFach[0].Name.Split('(').First() + listenObj.grupiertFach[1].Name.Split('(').First();
                     listenObj.grupiertFach[0].LerneinheitenZahl -= 3;
                     listenObj.grupiertFach[1].LerneinheitenZahl -= 3;
                 }
+                //If the day has less than 6, it adds just one Subject
                 else
                 {
                     listenObj.zeitverbracht[i].LernFacher += listenObj.grupiertFach[0].Name.Split('(').First();
                     listenObj.grupiertFach[0].LerneinheitenZahl -= listenObj.zeitverbracht[i].Lerneinheiten;
                 }
 
+                /*Orders the list of Subjets depending on the Gewichtungs Factor with every Iteration
+                 */
                 listenObj.grupiertFach = listenObj.grupiertFach.OrderByDescending(o => o.LerneinheitenZahl).ToList();
             }
 

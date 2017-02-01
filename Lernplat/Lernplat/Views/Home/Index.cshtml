@@ -30,7 +30,8 @@
                                 <td class="text-left">
                                     @Lernplat.Controllers.HomeController.listenObj.grupiertFach[i].Name.Split('(').First()
                                 </td>
-                                <td>
+                                <td></td>
+                                <td class="text-right">
                                     @Html.TextBoxFor(o => Model.Gewichtung[i], new
                                {
                                    min = "1",
@@ -47,7 +48,7 @@
                         <tr>
                             <td></td>
                             <td></td>
-                            <td>
+                            <td class="text-right">
                                 <button class="btn btn-sm btn-danger" type="submit"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
                             </td>
                         </tr>
