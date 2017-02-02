@@ -50,6 +50,11 @@ namespace Lernplat.Controllers
             return View(new GewichtungsModel());
         }
 
+        /// <summary>
+        /// Refreshing the page with the added values
+        /// </summary>
+        /// <param name="gew">Returning model</param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult Index(GewichtungsModel gew)
         {
