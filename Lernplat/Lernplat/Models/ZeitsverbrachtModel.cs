@@ -13,6 +13,7 @@ namespace Lernplat.Models
         public DateTime Tag { get; set; }
         public TimeSpan Verbrauch { get; set; }
         public int Lerneinheiten { get; set; }
-        public string LernFacher { get; set; }
+        public List<string> LernFacher { get; set; }
+        public string KlausurFach { get; set; }
     }
 }
