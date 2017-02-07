@@ -5,20 +5,19 @@ using System.Web;
 using System.IO;
 using Lernplat.Models;
 
-namespace Lernplat.Controllers
+namespace Lernplat.Controllers 
 {
-    public class HomeHeader
+    public class HomeHeader : Interfaces.IHomeHeader
     {
-        /// <summary>
-        /// Creates a calculated ZeitverbrachtModel list for the given LernplanModel list
-        /// </summary>
-        /// <param name="lernplan">LernplanModel list</param>
-        /// <returns></returns>
-        public static List<ZeitsverbrachtModel> VebrauchsCalculations(List<LernplanModel> lernplan)
+        public List<ZeitsverbrachtModel> VebrauchsCalculations(List<LernplanModel> lernplan)
         {
             List<ZeitsverbrachtModel> zeitverbracht = new List<ZeitsverbrachtModel>();
 
-            for (int i = 0; i < lernplan.Count() - 1; i++)
+            /*Iteration Variable
+             */
+            int i;
+
+            for (i = 0; i < lernplan.Count() - 1; i++)
             {
                 DateTime dt = new DateTime();
                 TimeSpan ts = new TimeSpan();
@@ -40,6 +39,11 @@ namespace Lernplat.Controllers
                  */
                 if (lernplan[i].Name == "Repetitorium Mathematik")
                     continue;
+
+                /*Breaks the Iteration if the List contains one member with the name "Klausur" in it
+                 */
+                if (lernplan[i].Name.Contains("Klausur"))
+                    break;
 
                 /*Sets the Timespan ts to 0 for the given filtered Subject
                  */
@@ -82,21 +86,36 @@ namespace Lernplat.Controllers
                     Tag = dt,
                     Verbrauch = ts,
                     Lerneinheiten = lerneinheit,
-                    LernFacher = ""
+                    LernFacher = new List<string>() { " ", " " }
+                    
                 });
 
                 HomeController.LehreinheitenCount += lerneinheit;
             }
 
+            /*Continues where the Broken Iteration left of
+             * Iterates the other member in the list and adds the needed "Klausur" Subjects on the coresponding days
+             */
+            for(int j = i; j < lernplan.Count(); j++)
+            {
+                /*Checks the name for the keywords "Klausur"
+                 * Adds the DateTime and the Timespan for the Subject in question
+                 */
+                if (lernplan[j].Name.Contains("Klausur"))
+                    zeitverbracht.Add(new ZeitsverbrachtModel()
+                    {
+                        Tag = lernplan[j].Beginn.Date,
+                        Verbrauch = lernplan[i].Ende - lernplan[i].Beginn,
+                        Lerneinheiten = 0,
+                        LernFacher = new List<string>() { "Klausur ", lernplan[j].Name.Replace("Klausur ", "") }
+
+                    });
+            }
+
             return zeitverbracht;
         }
 
-        /// <summary>
-        /// Creates a ZeitverbrachtModel list for the given csv filepath
-        /// </summary>
-        /// <param name="Path">String containing the csv filepath</param>
-        /// <returns></returns>
-        public static List<LernplanModel> DataLoader(string Path)
+        public List<LernplanModel> DataLoader(string Path)
         {
             List<LernplanModel> lernplan = new List<LernplanModel>();
             //Makes a reference to the csv file
@@ -138,12 +157,7 @@ namespace Lernplat.Controllers
             return lernplan;
         }
 
-        /// <summary>
-        /// Spreads the available Subjets on the Calender Dates dependent on the Gewichtugs factor on that Subjet
-        /// </summary>
-        /// <param name="listenObj">Object containing all Lists</param>
-        /// <returns></returns>
-        public static Listen LerneinheitenVerteiler(Listen listenObj)
+        public Listen LerneinheitenVerteiler(Listen listenObj)
         {
             /*Orders the list of Subjets depending on the Gewichtungs Factor
              */
@@ -153,17 +167,19 @@ namespace Lernplat.Controllers
              */
             for (int i = 0; i < listenObj.zeitverbracht.Count(); i++)
             {
+                if (listenObj.zeitverbracht[i].LernFacher[0] != " ") continue;
                 //If the day has 6 Lerneinheiten it adds two subjets with the highest Gewichtungs factor
                 if (listenObj.zeitverbracht[i].Lerneinheiten == 6)
                 {
-                    listenObj.zeitverbracht[i].LernFacher += listenObj.grupiertFach[0].Name.Split('(').First() + listenObj.grupiertFach[1].Name.Split('(').First();
+                    listenObj.zeitverbracht[i].LernFacher[0] = listenObj.grupiertFach[0].Name.Split('(').First();
+                    listenObj.zeitverbracht[i].LernFacher[1] = listenObj.grupiertFach[1].Name.Split('(').First();
                     listenObj.grupiertFach[0].LerneinheitenZahl -= 3;
                     listenObj.grupiertFach[1].LerneinheitenZahl -= 3;
                 }
                 //If the day has less than 6, it adds just one Subject
                 else
                 {
-                    listenObj.zeitverbracht[i].LernFacher += listenObj.grupiertFach[0].Name.Split('(').First();
+                    listenObj.zeitverbracht[i].LernFacher[0] = listenObj.grupiertFach[0].Name.Split('(').First();
                     listenObj.grupiertFach[0].LerneinheitenZahl -= listenObj.zeitverbracht[i].Lerneinheiten;
                 }
 

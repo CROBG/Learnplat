@@ -212,6 +212,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\IHomeController.cs" />
+    <Compile Include="Interfaces\IHomeHeader.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\GewichtungsModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -234,11 +236,13 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="PDFs\test.pdf" />
-    <Content Include="PDFs\BWL.pdf" />
-    <Content Include="PDFs\E-Technik.pdf" />
     <Content Include="LernplanFiles\Stundenplan.csv" />
     <Content Include="LernplanFiles\Verbrauch.csv" />
+    <Content Include="PDFs\Werkstoffkunde.pdf" />
+    <Content Include="PDFs\Allgemeine Betriebswirtschaftslehre.pdf" />
+    <Content Include="PDFs\Mathematik I.pdf" />
+    <Content Include="PDFs\Technische Mechanik I.pdf" />
+    <Content Include="PDFs\Volkswirtschaftslehre.pdf" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />

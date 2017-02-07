@@ -8,12 +8,11 @@
         <table class="table">
             <tr>
                 <td>
-                    <img src="http://www.mosbach.dhbw.de/fileadmin/user/public/studienangebote/in/DHBW_d_MOS_46mm_4c_ohne_schutzzone.jpg" width="81" height="39">
+                    <img src="http://bit.ly/2kQ3J5e" width="81" height="39">
                 </td>
                 <td class="text-right">
                     <button data-toggle="collapse" data-target="#demo" class="btn btn-danger">
-                        Fächer
-                        <span class="glyphicon glyphicon-arrow-down"></span>
+                        Fächer <span class="glyphicon glyphicon-arrow-down"></span>
                     </button>
                 </td>
             </tr>
@@ -22,13 +21,12 @@
             {
             <div class="container" style="margin-top:5px">
                 <div class="collapse" id="demo">
-                    @*Table*@
                     <table class="table">
                         @for (int i = 0; i < Lernplat.Controllers.HomeController.listenObj.grupiertFach.Count(); i++)
-                {
+                        {
                             <tr>
                                 <td class="text-left">
-                                    @Lernplat.Controllers.HomeController.listenObj.grupiertFach[i].Name.Split('(').First()
+                                    @Lernplat.Controllers.HomeController.listenObj.grupiertFach[i].Name
                                 </td>
                                 <td></td>
                                 <td class="text-right">
@@ -42,7 +40,6 @@
                                    type = "number"
                                })
                                 </td>
-
                             </tr>
                         }
                         <tr>
@@ -57,7 +54,6 @@
             </div>
         }
     </div>
-
 </div>
 
 <div style="margin-top: 30px">
@@ -65,7 +61,7 @@
         <tr>
             <td class="text-center"><b>Tag</b></td>
             <td class="text-center"><b>Zeit in der Uni</b></td>
-            <td class="text-center"><b>Lerneinheiten Zuhause</b></td>
+            <td class="text-center"><b>Lerneinheiten</b></td>
             <td class="text-center"><b>Empfohlene Lernfächer</b></td>
         </tr>
         @for (int i = 1; i < Lernplat.Controllers.HomeController.listenObj.zeitverbracht.Count; i++)
@@ -74,16 +70,30 @@
                 <td class="text-center">@Lernplat.Controllers.HomeController.listenObj.zeitverbracht[i].Tag.ToString("dd.MM.yyyy")</td>
                 <td class="text-center">@Lernplat.Controllers.HomeController.listenObj.zeitverbracht[i].Verbrauch.ToString("hh\\:mm")</td>
                 <td class="text-center">@Lernplat.Controllers.HomeController.listenObj.zeitverbracht[i].Lerneinheiten</td>
-                <td class="text-center">
+                <td class="text-left">
                     @if (Lernplat.Controllers.HomeController.SafeToRefresh)
                     {
-                            <b>@Lernplat.Controllers.HomeController.listenObj.zeitverbracht[i].LernFacher</b>
-                            //Html.ActionLink(Lernplat.Controllers.HomeController.listenObj.zeitverbracht[i].LernFacher, "PDF", "Home",
-                            //                new { FileName = Lernplat.Controllers.HomeController.listenObj.zeitverbracht[i].LernFacher },
+                        for (int j = 0; j < Lernplat.Controllers.HomeController.listenObj.zeitverbracht[i].LernFacher.Count(); j++)
+                        {
+
+                            if (Lernplat.Controllers.HomeController.listenObj.zeitverbracht[i].LernFacher[j] == "Klausur ")
+                            {
+                                <b> Klausur: </b>
+                            }
+                            else
+                            {
+                                <b>
+                                    @Html.ActionLink(Lernplat.Controllers.HomeController.listenObj.zeitverbracht[i].LernFacher[j], "PDF", "Home",
+                                             new { FileName = Lernplat.Controllers.HomeController.listenObj.zeitverbracht[i].LernFacher[j].Trim() }, new { @target = "_blank", style = "color: red" })
+                                    @if (j == 0 && Lernplat.Controllers.HomeController.listenObj.zeitverbracht[i].LernFacher[1] != " ")
+                                    {
+                                        <b> und </b>
+                                    }
+                                </b>
+                            }
+                        }
                     }
                 </td>
-
-
             </tr>
         }
     </table>

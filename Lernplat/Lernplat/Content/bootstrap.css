@@ -1497,6 +1497,12 @@ th {
   background-color: rgb(200, 200, 200);
 }
 
+.table-striped > tbody > tr:nth-child(1) > td,
+.table-striped > tbody > tr:nth-child(1) > th {
+	background-color: rgb(224, 0, 25);
+	color:white;
+}
+
 .table-hover > tbody > tr:hover > td,
 .table-hover > tbody > tr:hover > th {
   background-color: #f5f5f5;
@@ -2186,8 +2192,8 @@ fieldset[disabled] .btn-warning.active {
 
 .btn-danger {
   color: #ffffff;
-  background-color: #d9534f;
-  border-color: #d43f3a;
+  background-color: rgb(224, 0, 25,);
+  border-color: rgb(224, 0, 25,));
 }
 
 .btn-danger:hover,
@@ -2196,8 +2202,8 @@ fieldset[disabled] .btn-warning.active {
 .btn-danger.active,
 .open .dropdown-toggle.btn-danger {
   color: #ffffff;
-  background-color: #d2322d;
-  border-color: #ac2925;
+  background-color: rgb(224, 0, 25,);
+  border-color: rgb(224, 0, 25,);
 }
 
 .btn-danger:active,
@@ -2221,8 +2227,8 @@ fieldset[disabled] .btn-danger:active,
 .btn-danger.disabled.active,
 .btn-danger[disabled].active,
 fieldset[disabled] .btn-danger.active {
-  background-color: #d9534f;
-  border-color: #d43f3a;
+  background-color: rgb(224, 0, 25,);
+  border-color: rgb(224, 0, 25,);
 }
 
 .btn-success {
