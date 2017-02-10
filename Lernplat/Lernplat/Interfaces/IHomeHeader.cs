@@ -27,6 +27,6 @@ namespace Lernplat.Interfaces
         /// </summary>
         /// <param name="listenObj">Object containing all Lists</param>
         /// <returns></returns>
-        Listen LerneinheitenVerteiler(Listen listenObj);
+        MainModel LerneinheitenVerteiler(MainModel listenObj);
     }
 }

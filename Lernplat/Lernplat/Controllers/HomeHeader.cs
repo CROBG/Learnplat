@@ -157,7 +157,7 @@ namespace Lernplat.Controllers
             return lernplan;
         }
 
-        public Listen LerneinheitenVerteiler(Listen listenObj)
+        public MainModel LerneinheitenVerteiler(MainModel listenObj)
         {
             /*Orders the list of Subjets depending on the Gewichtungs Factor
              */

@@ -22,7 +22,7 @@ namespace Lernplat.Interfaces
         /// <param name="gew">Returning model</param>
         /// <returns></returns>
         [HttpPost]
-        ActionResult Index(GewichtungsModel gew);
+        ActionResult Index(MainModel MainObj);
 
         /// <summary>
         /// Opens a new Tab that consists of the requsted PDF document 

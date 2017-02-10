@@ -15,13 +15,9 @@ namespace Lernplat.Controllers
          */
         public static string Pfad = "~/LernplanFiles/Stundenplan.csv";
 
-        /*Object reference to the Model containing all the List Variables
-         */
-        public static Listen listenObj = new Listen();
-
         /*Private object used for savekeeping the listenObj data after refreshing the page
          */
-        private static Listen originalFacher = new Listen();
+        private MainModel originalFacher = new MainModel();
 
         /*Counter for the Lerneinheiten value
          */
@@ -37,70 +33,66 @@ namespace Lernplat.Controllers
              */
             HomeHeader headerObj = new HomeHeader();
 
+            MainModel MainObj1 = new MainModel();
+
             /*Loads the data from the csv File
              */
-            listenObj.lernplan = headerObj.DataLoader(Server.MapPath(Pfad));
+            MainObj1.lernplan = headerObj.DataLoader(Server.MapPath(Pfad));
 
             /*Calculates the timeusage for every Day
              */
-            listenObj.zeitverbracht = headerObj.VebrauchsCalculations(listenObj.lernplan);
-
+            MainObj1.zeitverbracht = headerObj.VebrauchsCalculations(MainObj1.lernplan);
 
             /*Groups the Name values from the LernplanModel list and creates a Subject list
              */
-            listenObj.grupiertFach = listenObj.lernplan.Where(o => o.Name.Contains("T2"))
-                                                       .GroupBy(o => o.Name)
-                                                       .Select(grp => grp.FirstOrDefault())
-                                                       .ToList();
+            MainObj1.grupiertFach = MainObj1.lernplan.Where(o => o.Name.Contains("T2"))
+                                                   .GroupBy(o => o.Name)
+                                                   .Select(grp => grp.FirstOrDefault())
+                                                   .ToList();
 
-            /*Safespace for keeping the listenObj Object for safekeeping
+            /*Safespace for keeping the MainObj Object for safekeeping
              */
-            originalFacher = listenObj;
 
-            return View(new GewichtungsModel());
+            originalFacher = MainObj1;
+
+            return View(MainObj1);
         }
 
         [HttpPost]
-        public ActionResult Index(GewichtungsModel gew)
+        public ActionResult Index(MainModel MainObj2)
         {
             /*Object reference to the HomeHeader
              */
             HomeHeader headerObj = new HomeHeader();
 
-            /*Checks if the site was refreshed for the first time
+            MainObj2.zeitverbracht = originalFacher.zeitverbracht;
+
+            int Gewichtungscounter = 0;
+
+            /*Iterates the grupped Subjects and adds the Weight values given back from the View
              */
-            if (!SafeToRefresh)
-            {
-                listenObj = originalFacher;
+            for (int i = 0; i < MainObj2.grupiertFach.Count; i++)
+                Gewichtungscounter += MainObj2.grupiertFach[i].Gewichtung;
 
-                int Gewichtungscounter = 0;
+            /*If nothing has been entered as a values, but the Site was refreshed the Counter will be set to the number of Subjects in the list
+             * This prevents the Method from dividing with zero
+             */
+            if (Gewichtungscounter == 0)
+                Gewichtungscounter = MainObj2.grupiertFach.Count();
 
-                /*Iterates the grupped Subjects and adds the Weight values given back from the View
-                 */
-                for (int i = 0; i < listenObj.grupiertFach.Count; i++)
-                {
-                    listenObj.grupiertFach[i].Gewichtung = gew.Gewichtung[i];
-                    Gewichtungscounter += gew.Gewichtung[i];
-                }
+            /*Adds the available Lerneinheiten to the Iterated Subject based on his weight
+             */
+            for (int i = 0; i < MainObj2.grupiertFach.Count; i++)
+                originalFacher.grupiertFach[i].LerneinheitenZahl = LehreinheitenCount * MainObj2.grupiertFach[i].Gewichtung / Gewichtungscounter;
 
-                /*If nothing has been entered as a values, but the Site was refreshed the Counter will be set to the number of Subjects in the list
-                 * This prevents the Method from dividing with zero
-                 */
-                if (Gewichtungscounter == 0) Gewichtungscounter = listenObj.grupiertFach.Count();
+            originalFacher = headerObj.LerneinheitenVerteiler(originalFacher);
+            /*Splits the Subjects on the Days
+             */
+            MainObj2 = originalFacher;
 
-                /*Adds the available Lerneinheiten to the Iterated Subject based on his weight
-                 */
-                for (int i = 0; i < listenObj.grupiertFach.Count; i++)
-                    listenObj.grupiertFach[i].LerneinheitenZahl = LehreinheitenCount * gew.Gewichtung[i] / Gewichtungscounter;
+            SafeToRefresh = true;
 
-                /*Splits the Subjects on the Days
-                 */
-                listenObj = headerObj.LerneinheitenVerteiler(listenObj);
-
-                SafeToRefresh = true;
-            }
-
-            return View(gew);
+            return View(originalFacher);
         }
 
         private string FDir_AppData = "~/PDFs/";

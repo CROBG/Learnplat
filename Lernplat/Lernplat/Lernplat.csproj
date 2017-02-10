@@ -218,7 +218,7 @@
     <Compile Include="Models\GewichtungsModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\LernplanModel.cs" />
-    <Compile Include="Models\Listen.cs" />
+    <Compile Include="Models\MainModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\ZeitsverbrachtModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
