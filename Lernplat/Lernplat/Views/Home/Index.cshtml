@@ -32,7 +32,7 @@
                                 </td>
                                 <td></td>
                                 <td class="text-right">
-                                    @Html.TextBoxFor(o => Model.grupiertFach[i].Gewichtung @*new
+                                    @Html.TextBoxFor(o => Model.grupiertFach[i].Gewichtung, new
                                {
                                    min = "1",
                                    max = Model.grupiertFach.Count(),
@@ -40,7 +40,7 @@
                                    value = Model.grupiertFach[i].Gewichtung,
                                    onkeydown = "return false",
                                    type = "number"
-                               }*@)
+                               })
                                 </td>
                             </tr>
                         }
